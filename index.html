@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inteligencia Competitiva · Redes Sociales</title>
+<style>
+  :root{
+    --black:#141414;
+    --black-2:#1e1e1e;
+    --gold:#FFC000;
+    --gold-dark:#C98F00;
+    --gray-bg:#F4F4F2;
+    --border:#dcdcd8;
+    --text:#222;
+    --muted:#6b6b6b;
+    --sin-cambios:#B7B7B7;
+    --cambio-mod:#FFC000;
+    --cambio-rel:#D64545;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',Arial,Helvetica,sans-serif;
+    background:var(--gray-bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  header.top{
+    background:var(--black);
+    color:#fff;
+    padding:36px 5vw 28px;
+    border-bottom:5px solid var(--gold);
+  }
+  header.top .eyebrow{
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  header.top h1{
+    margin:0 0 6px;
+    font-size:28px;
+    font-weight:700;
+  }
+  header.top p{
+    margin:0;
+    color:#c9c9c9;
+    font-size:14px;
+    max-width:760px;
+  }
+  nav.tabs{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--black-2);
+    display:flex;
+    gap:2px;
+    padding:0 5vw;
+    overflow-x:auto;
+  }
+  nav.tabs button{
+    background:transparent;
+    border:none;
+    color:#cfcfcf;
+    padding:14px 18px;
+    font-size:13.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+  nav.tabs button:hover{ color:#fff; }
+  nav.tabs button.active{
+    color:var(--gold);
+    border-bottom:3px solid var(--gold);
+  }
+  main{
+    padding:32px 5vw 80px;
+    max-width:1400px;
+    margin:0 auto;
+  }
+  section.panel{ display:none; }
+  section.panel.active{ display:block; animation:fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  h2.section-title{
+    font-size:20px;
+    margin:0 0 4px;
+    color:var(--black);
+    border-left:5px solid var(--gold);
+    padding-left:12px;
+  }
+  p.section-sub{
+    margin:2px 0 22px 17px;
+    color:var(--muted);
+    font-size:13.5px;
+  }
+
+  /* ---- KPI network cards ---- */
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:20px;
+    margin-bottom:36px;
+  }
+  .kpi-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .kpi-card .kpi-head{
+    background:var(--black);
+    color:#fff;
+    padding:12px 16px;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.03em;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .kpi-card .kpi-head span.dot{
+    width:9px;height:9px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:8px;
+  }
+  table.kpi-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+  table.kpi-table caption{
+    text-align:left;
+    background:var(--gold);
+    color:var(--black);
+    font-weight:700;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:6px 16px;
+  }
+  table.kpi-table th{
+    background:var(--gold);
+    color:var(--black);
+    text-align:left;
+    padding:8px 16px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  table.kpi-table th:last-child, table.kpi-table td:last-child{ text-align:right; }
+  table.kpi-table td{
+    padding:8px 16px;
+    border-top:1px solid var(--border);
+  }
+  table.kpi-table tr.leader td{ font-weight:700; background:#FFF7E0; }
+  table.kpi-table td.num{ font-variant-numeric:tabular-nums; }
+
+  /* ---- Company profile cards (Redes Sociales) ---- */
+  .company-block{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    margin-bottom:26px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .company-block .cb-head{
+    background:var(--black);
+    color:#fff;
+    padding:14px 20px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .company-block .cb-head h3{
+    margin:0;
+    font-size:17px;
+    color:var(--gold);
+    letter-spacing:.02em;
+  }
+  .company-block .cb-head span{
+    color:#b9b9b9;
+    font-size:12.5px;
+  }
+  table.profile{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12.8px;
+  }
+  table.profile thead th{
+    background:var(--gold);
+    color:var(--black);
+    padding:9px 12px;
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    border-right:1px solid rgba(0,0,0,.08);
+  }
+  table.profile tbody td{
+    padding:10px 12px;
+    border-top:1px solid var(--border);
+    border-right:1px solid var(--border);
+    vertical-align:top;
+  }
+  table.profile tbody tr:nth-child(even){ background:#FAFAF8; }
+  table.profile td.net{ font-weight:700; white-space:nowrap; }
+  table.profile td.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.profile td.status{ white-space:nowrap; }
+  .status-pill{
+    display:inline-block;
+    padding:2px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+  }
+  .status-activa{ background:#E6F4EA; color:#1E7A34; }
+  .status-muyactiva{ background:#FFF3D6; color:#8A5D00; }
+  .status-baja{ background:#FCE8E6; color:#B3261E; }
+  .status-na{ background:#eee; color:#777; }
+
+  /* ---- Notas / qualitative per platform ---- */
+  .notes-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px;
+    padding:16px 20px 20px;
+    background:#fcfcfb;
+  }
+  .note-card{
+    border:1px solid var(--border);
+    border-radius:5px;
+    background:#fff;
+    overflow:hidden;
+  }
+  .note-card .nc-head{
+    background:var(--gold);
+    color:var(--black);
+    font-weight:700;
+    font-size:12.5px;
+    padding:7px 12px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .note-card .nc-body{ padding:11px 12px; font-size:12.6px; color:#333; }
+  .note-card .nc-metrics{
+    display:flex;
+    gap:14px;
+    padding:0 12px 11px;
+    font-size:12px;
+  }
+  .note-card .nc-metrics b{ display:block; font-size:14px; color:var(--black); }
+  .note-card .nc-metrics span{ color:var(--muted); font-size:10.5px; text-transform:uppercase; letter-spacing:.03em; }
+
+  /* ---- Matriz de vigilancia ---- */
+  table.matrix{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    font-size:13px;
+    border:1px solid var(--border);
+  }
+  table.matrix th{
+    background:var(--black);
+    color:#fff;
+    padding:10px 14px;
+    text-align:left;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  table.matrix td{
+    padding:11px 14px;
+    border-top:1px solid var(--border);
+  }
+  table.matrix td.empresa{ font-weight:700; }
+  table.matrix tr.group-start td{ border-top:2px solid var(--black); }
+  .semaforo{
+    display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700;
+  }
+  .semaforo i{ width:13px; height:13px; border-radius:50%; display:inline-block; }
+  .sc-gris i{ background:var(--sin-cambios); }
+  .sc-amarillo i{ background:var(--cambio-mod); }
+  .sc-rojo i{ background:var(--cambio-rel); }
+  .legend{
+    display:flex; gap:22px; margin:0 0 18px 17px; font-size:12.5px; color:var(--muted);
+  }
+  .legend .item{ display:flex; align-items:center; gap:7px; }
+  .legend i{ width:12px; height:12px; border-radius:50%; display:inline-block; }
+
+  footer{
+    text-align:center;
+    padding:26px 20px 40px;
+    color:var(--muted);
+    font-size:11.5px;
+  }
+
+  @media (max-width:700px){
+    .kpi-grid, .notes-grid{ grid-template-columns:1fr; }
+    table.profile{ font-size:11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">Vigilancia de Competencia · Sector Maquinaria</div>
+  <h1>Presencia en Redes Sociales — Análisis Comparativo</h1>
+  <p>Comparativo de seguidores, interacción y actividad reciente en LinkedIn, Facebook, Instagram, X (Twitter) y sitio web para Construmac, Dimanor, Sitsa y Madisa.</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-target="panel-graficos">Gráficos</button>
+  <button class="tab-btn" data-target="panel-redes">Redes Sociales</button>
+  <button class="tab-btn" data-target="panel-matriz">Matriz de Vigilancia</button>
+</nav>
+
+<main>
+
+  <!-- ===================== PANEL 1: GRÁFICOS ===================== -->
+  <section id="panel-graficos" class="panel active">
+    <h2 class="section-title">Seguidores y Reacción Promedio por Red</h2>
+    <p class="section-sub">Comparativo directo entre las cuatro empresas por plataforma.</p>
+
+    <div class="kpi-grid">
+      <!-- LinkedIn -->
+      <div class="kpi-card">
+        <div class="kpi-head"><span><span class="dot"></span>LinkedIn</span></div>
+        <table class="kpi-table">
+          <caption>Seguidores</caption>
+          <tbody>
+            <tr><td>Dimanor</td><td class="num">2,000</td></tr>
+            <tr><td>Construmac</td><td class="num">3,000</td></tr>
+            <tr><td>Sitsa</td><td class="num">6,000</td></tr>
+            <tr class="leader"><td>Madisa</td><td class="num">19,000</td></tr>
+          </tbody>
+        </table>
+        <table class="kpi-table">
+          <caption>Reacción promedio</caption>
+          <tbody>
+            <tr><td>Construmac</td><td class="num">15.583</td></tr>
+            <tr><td>Dimanor</td><td class="num">30.133</td></tr>
+            <tr><td>Madisa</td><td class="num">37.130</td></tr>
+            <tr class="leader"><td>Sitsa</td><td class="num">37.136</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Facebook -->
+      <div class="kpi-card">
+        <div class="kpi-head"><span><span class="dot"></span>Facebook</span></div>
+        <table class="kpi-table">
+          <caption>Seguidores</caption>
+          <tbody>
+            <tr><td>Dimanor</td><td class="num">13,000</td></tr>
+            <tr><td>Construmac</td><td class="num">25,000</td></tr>
+            <tr><td>Sitsa</td><td class="num">92,000</td></tr>
+            <tr class="leader"><td>Madisa</td><td class="num">145,000</td></tr>
+          </tbody>
+        </table>
+        <table class="kpi-table">
+          <caption>Reacción promedio</caption>
+          <tbody>
+            <tr><td>Dimanor</td><td class="num">2.500</td></tr>
+            <tr><td>Sitsa</td><td class="num">6.720</td></tr>
+            <tr><td>Construmac</td><td class="num">8.542</td></tr>
+            <tr class="leader"><td>Madisa</td><td class="num">15.391</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Instagram -->
+      <div class="kpi-card">
+        <div class="kpi-head"><span><span class="dot"></span>Instagram</span></div>
+        <table class="kpi-table">
+          <caption>Seguidores</caption>
+          <tbody>
+            <tr><td>Construmac</td><td class="num">1,646</td></tr>
+            <tr><td>Sitsa</td><td class="num">2,097</td></tr>
+            <tr><td>Dimanor</td><td class="num">5,684</td></tr>
+            <tr class="leader"><td>Madisa</td><td class="num">9,783</td></tr>
+          </tbody>
+        </table>
+        <table class="kpi-table">
+          <caption>Reacción promedio</caption>
+          <tbody>
+            <tr><td>Construmac</td><td class="num">5.160</td></tr>
+            <tr><td>Sitsa</td><td class="num">9.440</td></tr>
+            <tr><td>Madisa</td><td class="num">28.000</td></tr>
+            <tr class="leader"><td>Dimanor</td><td class="num">39.375</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="section-title">Detalle y Notas Cualitativas por Empresa</h2>
+    <p class="section-sub">Seguidores, reacción promedio y observaciones de contenido por red social.</p>
+
+    <!-- Construmac -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Construmac</h3><span>Resumen por red</span></div>
+      <div class="notes-grid">
+        <div class="note-card">
+          <div class="nc-head"><span>LinkedIn</span></div>
+          <div class="nc-metrics"><div><b>3,000</b><span>Seguidores</span></div><div><b>15.583</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Facebook</span></div>
+          <div class="nc-metrics"><div><b>25,000</b><span>Seguidores</span></div><div><b>8.5417</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Instagram</span></div>
+          <div class="nc-metrics"><div><b>1,646</b><span>Seguidores</span></div><div><b>5.16</b><span>Reacción prom.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Madisa -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Madisa</h3><span>Resumen por red</span></div>
+      <div class="notes-grid">
+        <div class="note-card">
+          <div class="nc-head"><span>LinkedIn</span></div>
+          <div class="nc-body">Muchas publicaciones de energía y plantas eléctricas; otras refieren a su blog con contenido de maquinaria. Separación entre publicaciones intermedia.</div>
+          <div class="nc-metrics"><div><b>19,000</b><span>Seguidores</span></div><div><b>37.130</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Facebook</span></div>
+          <div class="nc-body">Mucha publicación de venta de refacciones/ofertas. Las que suben el promedio de reacciones son ofertas de trabajo y contenido conmemorativo.</div>
+          <div class="nc-metrics"><div><b>145,000</b><span>Seguidores</span></div><div><b>15.391</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Instagram</span></div>
+          <div class="nc-body">Mismas publicaciones que Facebook.</div>
+          <div class="nc-metrics"><div><b>9,783</b><span>Seguidores</span></div><div><b>28</b><span>Reacción prom.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sitsa -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Sitsa</h3><span>Resumen por red</span></div>
+      <div class="notes-grid">
+        <div class="note-card">
+          <div class="nc-head"><span>LinkedIn</span></div>
+          <div class="nc-body">Publicaciones sobre presencia en exposiciones, con buena interacción del público; publicaciones muy separadas.</div>
+          <div class="nc-metrics"><div><b>6,000</b><span>Seguidores</span></div><div><b>37.136</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Facebook</span></div>
+          <div class="nc-body">Pocas publicaciones y poca interacción; las de mayor atención son capacitaciones o asistencia a eventos.</div>
+          <div class="nc-metrics"><div><b>92,000</b><span>Seguidores</span></div><div><b>6.72</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Instagram</span></div>
+          <div class="nc-body">Publicaciones muy similares y dispersas.</div>
+          <div class="nc-metrics"><div><b>2,097</b><span>Seguidores</span></div><div><b>9.44</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>X (Twitter)</span></div>
+          <div class="nc-body">Presencia desde 2023; actualmente no hay actualizaciones.</div>
+          <div class="nc-metrics"><div><b>938</b><span>Seguidores</span></div><div><b>1.429</b><span>Reacción prom.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimanor -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Dimanor</h3><span>Resumen por red</span></div>
+      <div class="notes-grid">
+        <div class="note-card">
+          <div class="nc-head"><span>LinkedIn</span></div>
+          <div class="nc-body">Poca frecuencia de publicaciones y pocas interacciones; las de más interacción son menciones de proveedores.</div>
+          <div class="nc-metrics"><div><b>2,000</b><span>Seguidores</span></div><div><b>30.133</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Facebook</span></div>
+          <div class="nc-body">Frecuencia un tanto distante; la mayor parte es contenido hecho con IA.</div>
+          <div class="nc-metrics"><div><b>13,000</b><span>Seguidores</span></div><div><b>2.5</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Instagram</span></div>
+          <div class="nc-body">Publicaciones distanciadas.</div>
+          <div class="nc-metrics"><div><b>5,684</b><span>Seguidores</span></div><div><b>39.375</b><span>Reacción prom.</span></div></div>
+        </div>
+        <div class="note-card">
+          <div class="nc-head"><span>Web</span></div>
+          <div class="nc-body">Sitio muy trabado, no se puede acceder.</div>
+          <div class="nc-metrics"><div><b>—</b><span>Seguidores</span></div><div><b>—</b><span>Reacción prom.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PANEL 2: REDES SOCIALES ===================== -->
+  <section id="panel-redes" class="panel">
+    <h2 class="section-title">Ficha Detallada por Empresa y Red Social</h2>
+    <p class="section-sub">Usuario, seguidores, publicaciones, frecuencia, tipo de contenido y últimos movimientos relevantes.</p>
+
+    <!-- Construmac -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Construmac</h3><span>4 canales monitoreados</span></div>
+      <table class="profile">
+        <thead><tr>
+          <th>Red</th><th>Usuario / Página</th><th>Seguidores</th><th>Publicaciones</th><th>Frecuencia</th><th>Contenido predominante</th><th>Actividad</th><th>Notas / Movimientos</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="net">Facebook</td><td>ConstrumacMx</td><td class="num">25,242</td><td class="num">—</td><td>Regular (varias veces/mes)</td><td>Producto (excavadoras, financiamiento), transmisiones en vivo, eventos técnicos (jornadas viales, AMCI)</td><td class="status"><span class="status-pill status-activa">Activa</span></td><td>Usa Facebook Live para jornadas técnicas; aniversario de 47–49 años como eje narrativo de marca</td></tr>
+          <tr><td class="net">Instagram</td><td>@construmacmx</td><td class="num">1,515</td><td class="num">661</td><td>Alta (661 posts acumulados)</td><td>Producto y maquinaria pesada, refacciones y servicio</td><td class="status"><span class="status-pill status-activa">Activa</span></td><td>Cuenta consolidada (única, sin duplicados regionales); mensaje enfocado en distribución de maquinaria</td></tr>
+          <tr><td class="net">LinkedIn</td><td>Construmac®</td><td class="num">1,916</td><td class="num">—</td><td>Moderada</td><td>Institucional: eventos gremiales (AMCI), aniversario, lanzamiento de tienda en línea</td><td class="status"><span class="status-pill status-activa">Activa</span></td><td>Recientemente lanzó tienda en línea de refacciones; anunciado también en LinkedIn</td></tr>
+          <tr><td class="net">Sitio web</td><td>construmac.com</td><td class="num">—</td><td class="num">—</td><td>—</td><td>Catálogo de maquinaria nueva/usada, refacciones, capacitación y tienda en línea</td><td class="status"><span class="status-pill status-activa">Activo</span></td><td>Incorporó tienda en línea de refacciones; mensaje de "49 años" vigente en 2025–2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Dimanor -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Dimanor</h3><span>4 canales monitoreados</span></div>
+      <table class="profile">
+        <thead><tr>
+          <th>Red</th><th>Usuario / Página</th><th>Seguidores</th><th>Publicaciones</th><th>Frecuencia</th><th>Contenido predominante</th><th>Actividad</th><th>Notas / Movimientos</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="net">Facebook</td><td>dimanorJohnDeere</td><td class="num">13,293</td><td class="num">—</td><td>Regular</td><td>Producto agrícola (John Deere) y construcción, promociones (aceite/refacciones)</td><td class="status"><span class="status-pill status-activa">Activa</span></td><td>Maneja también páginas por sucursal (Delicias, etc.) — estrategia de páginas locales</td></tr>
+          <tr><td class="net">Instagram</td><td>@dimanorjohndeere</td><td class="num">5,389</td><td class="num">210</td><td>Alta relación seguidores/post</td><td>Producto (tractores, retroexcavadoras), eventos propios ("Dimanor Experience"), testimoniales</td><td class="status"><span class="status-pill status-muyactiva">Muy activa (2025–2026)</span></td><td>Evento de marca propio "Dimanor Experience 2025"; programa de fidelidad "Litros de…" (aceites/lubricantes)</td></tr>
+          <tr><td class="net">LinkedIn</td><td>Distribuidora de Maquinaria del Norte SA de CV</td><td class="num">—</td><td class="num">—</td><td>Baja / institucional</td><td>Producto (perfil de empresa, vacantes)</td><td class="status"><span class="status-pill status-baja">Poca actividad</span></td><td>Inauguró un "Operations Center" John Deere en Chihuahua para monitoreo de flotas — apuesta por telemetría/agro 4.0</td></tr>
+          <tr><td class="net">Sitio web</td><td>dimanor.com.mx</td><td class="num">—</td><td class="num">—</td><td>—</td><td>Institucional, línea de negocio agrícola y construcción, sucursales</td><td class="status"><span class="status-pill status-activa">Activo</span></td><td>También opera dimanorsoluciones.com (Tijuana) — posible expansión de cobertura geográfica</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sitsa -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Sitsa</h3><span>5 canales monitoreados</span></div>
+      <table class="profile">
+        <thead><tr>
+          <th>Red</th><th>Usuario / Página</th><th>Seguidores</th><th>Publicaciones</th><th>Frecuencia</th><th>Contenido predominante</th><th>Actividad</th><th>Notas / Movimientos</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="net">Facebook</td><td>SitsaMex</td><td class="num">92,210</td><td class="num">—</td><td>Muy alta (mismo día, contenido diario/semanal)</td><td>Producto (trituración, concreto, minería), cultura/orgullo de marca (deportes, fechas conmemorativas)</td><td class="status"><span class="status-pill status-muyactiva">Muy activa</span></td><td>Página con reseñas activas (6 reviews); maneja páginas regionales (Chihuahua, Tlanepantla)</td></tr>
+          <tr><td class="net">Instagram</td><td>@sitsamex</td><td class="num">2,031</td><td class="num">400</td><td>Alta</td><td>Producto especializado (martillos hidráulicos, trituración), fechas del sector (Día del Minero)</td><td class="status"><span class="status-pill status-activa">Activa</span></td><td>Mensaje técnico dirigido a nicho de minería/trituración, más especializado que Construmac</td></tr>
+          <tr><td class="net">LinkedIn</td><td>Sitsa</td><td class="num">3,364</td><td class="num">—</td><td>Moderada-alta</td><td>Institucional + producto (marcas: Metso, Manitowoc, Schwing, Grove, Kalmar, etc.)</td><td class="status"><span class="status-pill status-activa">Activa</span></td><td>Portafolio mucho más amplio que Construmac (10+ marcas líderes); enfatiza vacantes/reclutamiento</td></tr>
+          <tr><td class="net">Sitio web</td><td>sitsa.com.mx</td><td class="num">—</td><td class="num">—</td><td>—</td><td>Catálogo extenso, blog de servicios técnicos, sección de sucursales (10 ubicaciones)</td><td class="status"><span class="status-pill status-muyactiva">Muy activo (2025)</span></td><td>Estructura más rica que Construmac: blog de servicios técnicos, análisis de condición</td></tr>
+          <tr><td class="net">X (Twitter)</td><td>@SitsaMex</td><td class="num">938</td><td class="num">—</td><td>Baja (últimos posts de 2023)</td><td>Producto y fechas conmemorativas del sector</td><td class="status"><span class="status-pill status-baja">Inactiva</span></td><td>Canal secundario, menor prioridad frente a Facebook/Instagram</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Madisa -->
+    <div class="company-block">
+      <div class="cb-head"><h3>Madisa</h3><span>4 canales monitoreados</span></div>
+      <table class="profile">
+        <thead><tr>
+          <th>Red</th><th>Usuario / Página</th><th>Seguidores</th><th>Publicaciones</th><th>Frecuencia</th><th>Contenido predominante</th><th>Actividad</th><th>Notas / Movimientos</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="net">Facebook</td><td>MadisaCAT</td><td class="num">144,947</td><td class="num">—</td><td>Muy alta (contratación activa)</td><td>Producto CAT, reclutamiento, sucursales (multi-página por ciudad)</td><td class="status"><span class="status-pill status-muyactiva">Muy activa</span></td><td>Estructura de "red de páginas" por sucursal (Puebla, Monterrey, Chihuahua, Toluca, Pachuca) — cobertura local fuerte</td></tr>
+          <tr><td class="net">Instagram</td><td>@madisacat</td><td class="num">9,604</td><td class="num">1,175</td><td>Muy alta</td><td>Producto CAT, sucursales agrícolas, alianzas de marca (PALFINGER), cultura/talento</td><td class="status"><span class="status-pill status-muyactiva">Muy activa (2026)</span></td><td>Mayor volumen de publicaciones de las 4 empresas (1,175); campañas con cuenta regresiva/lanzamientos</td></tr>
+          <tr><td class="net">LinkedIn</td><td>MADISA CAT</td><td class="num">13,927</td><td class="num">—</td><td>Alta</td><td>Institucional, entregas de equipo, alianzas (PALFINGER), cultura organizacional, RH</td><td class="status"><span class="status-pill status-muyactiva">Muy activa</span></td><td>Empresa de 1,001–5,000 empleados; fuerte employer branding y transformación digital (proyecto Tr3x)</td></tr>
+          <tr><td class="net">Sitio web</td><td>madisa.com / grupomadisa.com / renta.madisa.com</td><td class="num">—</td><td class="num">—</td><td>—</td><td>Ecosistema de sitios: maquinaria, renta, combustibles, construcción, manejo de materiales, lubricación</td><td class="status"><span class="status-pill status-muyactiva">Muy activo (2026)</span></td><td>Estrategia "Grupo MADISA" multi-sitio/multi-unidad de negocio — el modelo más sofisticado del grupo analizado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== PANEL 3: MATRIZ DE VIGILANCIA ===================== -->
+  <section id="panel-matriz" class="panel">
+    <h2 class="section-title">Matriz de Vigilancia — Observaciones de Agosto</h2>
+    <p class="section-sub">Señales de cambio detectadas por empresa y su nivel de relevancia.</p>
+
+    <div class="legend">
+      <div class="item"><i style="background:var(--sin-cambios)"></i> Sin cambios</div>
+      <div class="item"><i style="background:var(--cambio-mod)"></i> Cambio moderado</div>
+      <div class="item"><i style="background:var(--cambio-rel)"></i> Cambio relevante</div>
+    </div>
+
+    <table class="matrix">
+      <thead>
+        <tr><th>Empresa</th><th>Señal</th><th>Observaciones_Agosto</th><th>Semáforo</th></tr>
+      </thead>
+      <tbody>
+        <tr class="group-start"><td class="empresa">Dimanor</td><td>Eventos de marca propios ("Dimanor Experience")</td><td>Evento recurrente usado como eje de contenido en Instagram/Facebook</td><td><div class="semaforo sc-amarillo"><i></i>Cambio moderado</div></td></tr>
+        <tr><td class="empresa">Dimanor</td><td>Programas de lealtad/promoción</td><td>Promociones de refacciones/lubricantes con mecánica de puntos o volumen</td><td><div class="semaforo sc-amarillo"><i></i>Cambio moderado</div></td></tr>
+        <tr><td class="empresa">Dimanor</td><td>Telemetría / Operations Center (John Deere)</td><td>Centro de monitoreo de flotas inaugurado en Chihuahua</td><td><div class="semaforo sc-rojo"><i></i>Cambio relevante</div></td></tr>
+
+        <tr class="group-start"><td class="empresa">Sitsa</td><td>Cadencia de publicación en Facebook</td><td>Publicaciones frecuentes, incluso de contenido no técnico (deportivo, fechas conmemorativas)</td><td><div class="semaforo sc-gris"><i></i>Sin cambios</div></td></tr>
+        <tr><td class="empresa">Sitsa</td><td>Blog técnico en sitio web</td><td>Blog con contenido de mantenimiento predictivo y servicios técnicos</td><td><div class="semaforo sc-gris"><i></i>Sin cambios</div></td></tr>
+        <tr><td class="empresa">Sitsa</td><td>Portafolio de marcas representadas</td><td>10+ marcas (Metso, Manitowoc, Schwing, Grove, Kalmar, etc.) comunicadas activamente</td><td><div class="semaforo sc-amarillo"><i></i>Cambio moderado</div></td></tr>
+
+        <tr class="group-start"><td class="empresa">Madisa</td><td>Escala de comunidad (FB/IG/LinkedIn)</td><td>Líder absoluto en las 3 redes analizadas; muy por encima del resto</td><td><div class="semaforo sc-rojo"><i></i>Cambio relevante</div></td></tr>
+        <tr><td class="empresa">Madisa</td><td>Páginas de Facebook por sucursal</td><td>Multiplica presencia con páginas locales (Puebla, Monterrey, Toluca, Pachuca, etc.)</td><td><div class="semaforo sc-rojo"><i></i>Cambio relevante</div></td></tr>
+        <tr><td class="empresa">Madisa</td><td>Estrategia "Grupo" multi-sitio</td><td>grupomadisa.com integra maquinaria, renta, combustibles, construcción, lubricación</td><td><div class="semaforo sc-rojo"><i></i>Cambio relevante</div></td></tr>
+        <tr><td class="empresa">Madisa</td><td>Employer branding / RH</td><td>Publicaciones frecuentes de cultura organizacional y reclutamiento</td><td><div class="semaforo sc-amarillo"><i></i>Cambio moderado</div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>Reporte generado a partir del archivo de seguimiento de competencia · Redes Sociales &amp; Matriz de Vigilancia</footer>
+
+<script>
+  const buttons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.panel');
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      buttons.forEach(b=>b.classList.remove('active'));
+      panels.forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
